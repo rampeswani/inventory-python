@@ -34,7 +34,17 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:7001',  # Your Angular app
 ]
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
+MEDIA_URLS ='/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=3),
@@ -100,18 +110,29 @@ WSGI_APPLICATION = 'inventory_project_python.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         # 'ENGINE': 'django.db.backends.sqlite3',
+#         # 'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'sahil_shop_new',
+#         'USER': 'inventory_shop_admin',
+#         'PASSWORD': '1234',
+#         'HOST': 'localhost',
+#     }
+# }
 DATABASES = {
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sahil_shop_new',
-        'USER': 'inventory_shop_admin',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'AzCjSTmZApFpvRvXMzHBtfrKVZWuChry',
+        'HOST': 'postgres-3j19.railway.internal',
+        'PORT' : '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
