@@ -36,6 +36,9 @@ CORS_ALLOWED_ORIGINS = [
 ]
 ALLOWED_HOSTS = ['*']
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build')
+# settings.py
+
+STATIC_URL = '/static/'
 
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
