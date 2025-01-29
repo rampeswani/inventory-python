@@ -238,7 +238,7 @@ class CustomerAPIView(APIView):
             customer_contact_number=customer_data['customer_contact_number'],
             credit_amount=customer_data['credit_amount'],
             customerType=customer_type,  # Set the customerType foreign key
-            description=customer_data.get('description', ''),
+            description=customer_data['description'],
             user=user,
             created_by=user,
             created_IP="ip_address",  # Placeholder for IP address, you can adjust it
