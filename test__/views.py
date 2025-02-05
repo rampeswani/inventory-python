@@ -93,17 +93,31 @@ from rest_framework.decorators import api_view
 import os
 from django.templatetags.static import static
 from django.conf import settings
+from django.contrib.staticfiles.storage import staticfiles_storage
+import logging
+from django.http import JsonResponse
+
+
+logger = logging.getLogger(__name__)
+
 # @api_view(['GET'])
 def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
     # captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
     # font_path = static('fonts/a.JPG')  # This should resolve correctly in both local and live environments
     # image_path = static('static/fonts/a.JPG')
-    static_dir = settings.STATIC_ROOT  
+    # static_dir = settings.STATIC_ROOT  
 
     # Full path to the image
-    image_full_path = os.path.join(static_dir  ,'fonts', 'a.JPG')
-    print(f"Looking for image at: {image_full_path}")  # Debugging log
+    try:
+        image_url = static('fonts/a.jpg')  # Get static file URL
+        return JsonResponse({'image_url': request.build_absolute_uri(image_url)})
+    except Exception as e:
+        logger.error(f"Error in get_image_url: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+    # print(f"Looking for image at: {image_full_path}")  # Debugging log
 
 
     # print("font path",font_path)
@@ -135,8 +149,8 @@ def generate_captcha(request):
         # response['Access-Control-Allow-Headers'] = 'Content-Type'
 
         # return response
-    response = HttpResponse()
-    return FileResponse(open(image_full_path, 'rb'), content_type='image/jpeg')
+    
+    
 
     # except OSError as e:
     #     print(f"Error loading font: {e}")
