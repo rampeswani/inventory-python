@@ -97,7 +97,8 @@ def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
     # captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
     # font_path = static('fonts/a.JPG')  # This should resolve correctly in both local and live environments
-    image_path = static('fonts/a.JPG')
+    image_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'a.JPG')
+
 
     # print("font path",font_path)
     #print(f"Font path: {font_path}")  # Log the font path
