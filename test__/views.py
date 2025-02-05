@@ -95,7 +95,7 @@ from django.templatetags.static import static
 def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
     captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-    font_path = static('fonts/arial.ttf')  # This should resolve correctly in both local and live environments
+    font_path = static('fonts/ariblk.ttf')  # This should resolve correctly in both local and live environments
     print(f"Font path: {font_path}")  # Log the font path
 
     try:
