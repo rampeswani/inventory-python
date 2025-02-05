@@ -103,13 +103,13 @@ def generate_captcha(request):
     # font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
     font_path = static('fonts/ariblk.ttf')  
     print("font path is",font_path)
-    try:
+    #try:
         
         # Load the custom font
-        font = ImageFont.truetype(font_path, 40)  # Using a larger font size (e.g., 40)
-    except IOError:
-        # If the font is not available, fall back to default
-        font = ImageFont.load_default()
+    font = ImageFont.truetype(font_path, 40)  # Using a larger font size (e.g., 40)
+    #except IOError:
+    #    # If the font is not available, fall back to default
+       # font = ImageFont.load_default()
     # Use a simple font (you can customize this or use any font)
     #try:
     #font = ImageFont.truetype("arial.ttf", 40)  # Using a larger font size (e.g., 40)
