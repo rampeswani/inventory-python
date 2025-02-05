@@ -88,20 +88,37 @@ from django.utils.crypto import get_random_string
 from django.core.cache import cache
 
 # Function to generate CAPTCHA image
+from rest_framework.decorators import api_view
+# @api_view(['GET'])
 def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
     captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
     # Create an image using Pillow
-    width, height = 150, 50
+    width, height = 300, 100
     image = Image.new('RGB', (width, height), color=(255, 255, 255))
     draw = ImageDraw.Draw(image)
     
     # Use a simple font (you can customize this or use any font)
-    font = ImageFont.load_default()
+    try:
+        font = ImageFont.truetype("arial.ttf", 40)  # Using a larger font size (e.g., 40)
+    except IOError:
+        font = ImageFont.load_default()  # Fallback to default font if custom font not available
+    
+    bbox = draw.textbbox((0, 0), captcha_text, font=font)
+    text_width = bbox[2] - bbox[0]
+    text_height = bbox[3] - bbox[1]
+    
+    # Position text centrally
+    text_position = ((width - text_width) // 2, (height - text_height) // 2)  # Center text
+
+    # Draw the CAPTCHA text on the image with larger letters
+    draw.text(text_position, captcha_text, font=font, fill=(0, 0, 0))
 
     # Draw the CAPTCHA text on the image
-    draw.text((50, 15), captcha_text, font=font, fill=(0, 0, 0))
+    # draw.text((50, 15), captcha_text, font=font, fill=(0, 0, 0))
+    # draw.text(text_position, captcha_text, font=font, fill=(0, 0, 0))
+
 
     # Save CAPTCHA text in the cache with a short expiration time
     cache.set('captcha', captcha_text, timeout=300)  # 5 minutes timeout
