@@ -95,54 +95,89 @@ from django.templatetags.static import static
 def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
     captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    font_path = static('fonts/arial.ttf')  # This should resolve correctly in both local and live environments
+    print(f"Font path: {font_path}")  # Log the font path
 
-    # Create an image using Pillow
-    width, height = 300, 100
-    image = Image.new('RGB', (width, height), color=(255, 255, 255))
-    draw = ImageDraw.Draw(image)
-    # font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
-    font_path = static('fonts/ariblk.ttf')  
-    print("font path is",font_path)
-    #try:
+    try:
+        # Create an image using Pillow
+        width, height = 300, 100  # Adjusted size to accommodate larger font
+        image = Image.new('RGB', (width, height), color=(255, 255, 255))
+        draw = ImageDraw.Draw(image)
+
+        # Use the font from the static directory
+        font = ImageFont.truetype(font_path, 40)  # Increase the font size
+
+        # Draw the CAPTCHA text on the image
+        text_width, text_height = draw.textsize(captcha_text, font=font)
+        draw.text(((width - text_width) / 2, (height - text_height) / 2), captcha_text, font=font, fill=(0, 0, 0))
+
+        # Save CAPTCHA text in the cache with a short expiration time
+        cache.set('captcha', captcha_text, timeout=300)  # 5 minutes timeout
+
+        # Return the image as a response
+        response = HttpResponse(content_type="image/png")
+        image.save(response, "PNG")
         
-        # Load the custom font
-    font = ImageFont.truetype(font_path, 40)  # Using a larger font size (e.g., 40)
-    #except IOError:
-    #    # If the font is not available, fall back to default
-       # font = ImageFont.load_default()
-    # Use a simple font (you can customize this or use any font)
-    #try:
-    #font = ImageFont.truetype("arial.ttf", 40)  # Using a larger font size (e.g., 40)
-    #except IOError:
-     #   font = ImageFont.load_default()  # Fallback to default font if custom font not available
-    
-    bbox = draw.textbbox((0, 0), captcha_text, font=font)
-    text_width = bbox[2] - bbox[0]
-    text_height = bbox[3] - bbox[1]
-    
-    # Position text centrally
-    text_position = ((width - text_width) // 2, (height - text_height) // 2)  # Center text
+        # Allow cross-origin requests
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Content-Type'
 
-    # Draw the CAPTCHA text on the image with larger letters
-    draw.text(text_position, captcha_text, font=font, fill=(0, 0, 0))
+        return response
 
-    # Draw the CAPTCHA text on the image
-    # draw.text((50, 15), captcha_text, font=font, fill=(0, 0, 0))
+    except OSError as e:
+        print(f"Error loading font: {e}")
+        # Fallback to default font if custom font fails
+        font = ImageFont.load_default()
+        return HttpResponse("Error generating CAPTCHA image.", status=500)
+
+    # # Create an image using Pillow
+    # width, height = 300, 100
+    # image = Image.new('RGB', (width, height), color=(255, 255, 255))
+    # draw = ImageDraw.Draw(image)
+    # # font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
+    # font_path = static('fonts/ariblk.ttf')  
+    # print("font path is",font_path)
+    # #try:
+        
+    #     # Load the custom font
+    # font = ImageFont.truetype(font_path, 40)  # Using a larger font size (e.g., 40)
+    # #except IOError:
+    # #    # If the font is not available, fall back to default
+    #    # font = ImageFont.load_default()
+    # # Use a simple font (you can customize this or use any font)
+    # #try:
+    # #font = ImageFont.truetype("arial.ttf", 40)  # Using a larger font size (e.g., 40)
+    # #except IOError:
+    #  #   font = ImageFont.load_default()  # Fallback to default font if custom font not available
+    
+    # bbox = draw.textbbox((0, 0), captcha_text, font=font)
+    # text_width = bbox[2] - bbox[0]
+    # text_height = bbox[3] - bbox[1]
+    
+    # # Position text centrally
+    # text_position = ((width - text_width) // 2, (height - text_height) // 2)  # Center text
+
+    # # Draw the CAPTCHA text on the image with larger letters
     # draw.text(text_position, captcha_text, font=font, fill=(0, 0, 0))
 
+    # # Draw the CAPTCHA text on the image
+    # # draw.text((50, 15), captcha_text, font=font, fill=(0, 0, 0))
+    # # draw.text(text_position, captcha_text, font=font, fill=(0, 0, 0))
 
-    # Save CAPTCHA text in the cache with a short expiration time
-    cache.set('captcha', captcha_text, timeout=300)  # 5 minutes timeout
 
-    # Return the image as a response
-    response = HttpResponse(content_type="image/png")
-    image.save(response, "PNG")
+    # # Save CAPTCHA text in the cache with a short expiration time
+    # cache.set('captcha', captcha_text, timeout=300)  # 5 minutes timeout
+
+    # # Return the image as a response
+    # response = HttpResponse(content_type="image/png")
+    # image.save(response, "PNG")
     
 
-    response['Access-Control-Allow-Origin'] = '*'
-    response['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response['Access-Control-Allow-Headers'] = 'Content-Type'
-    return response
+    # response['Access-Control-Allow-Origin'] = '*'
+    # response['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+    # response['Access-Control-Allow-Headers'] = 'Content-Type'
+    # return response
 
 
 
