@@ -102,7 +102,7 @@ def generate_captcha(request):
     static_dir = settings.STATIC_ROOT  
 
     # Full path to the image
-    image_full_path = os.path.join(static_dir ,'static' ,'fonts', 'a.JPG')
+    image_full_path = os.path.join(static_dir  ,'fonts', 'a.JPG')
     print(f"Looking for image at: {image_full_path}")  # Debugging log
 
 
