@@ -89,6 +89,7 @@ from django.core.cache import cache
 
 # Function to generate CAPTCHA image
 from rest_framework.decorators import api_view
+import os
 # @api_view(['GET'])
 def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
@@ -98,10 +99,17 @@ def generate_captcha(request):
     width, height = 300, 100
     image = Image.new('RGB', (width, height), color=(255, 255, 255))
     draw = ImageDraw.Draw(image)
-    
+    font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
+    try:
+        
+        # Load the custom font
+        font = ImageFont.truetype(font_path, 40)  # Using a larger font size (e.g., 40)
+    except IOError:
+        # If the font is not available, fall back to default
+        font = ImageFont.load_default()
     # Use a simple font (you can customize this or use any font)
     #try:
-    font = ImageFont.truetype("arial.ttf", 40)  # Using a larger font size (e.g., 40)
+    #font = ImageFont.truetype("arial.ttf", 40)  # Using a larger font size (e.g., 40)
     #except IOError:
      #   font = ImageFont.load_default()  # Fallback to default font if custom font not available
     
