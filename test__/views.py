@@ -105,6 +105,7 @@ def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
     captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
     font_path = static('fonts/ariblk.ttf')  # This should resolve correctly in both local and live environments
+    
     # image_path = static('static/fonts/a.JPG')
     # static_dir = settings.STATIC_ROOT  
 
@@ -162,52 +163,60 @@ def generate_captcha(request):
     #     return JsonResponse({'error': str(e)}, status=500)
 
     # # Create an image using Pillow
-    width, height = 300, 100
-    image = Image.new('RGB', (width, height), color=(255, 255, 255))
-    draw = ImageDraw.Draw(image)
-    # font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
-    
-    print("font path is",font_path)
-    #try:
+    try :
+        width, height = 300, 100
+        image = Image.new('RGB', (width, height), color=(255, 255, 255))
+        draw = ImageDraw.Draw(image)
+        # font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
         
-        # Load the custom font
-    font = ImageFont.truetype(font_path, 40)  # Using a larger font size (e.g., 40)
-    #except IOError:
-    #    # If the font is not available, fall back to default
-       # font = ImageFont.load_default()
-    # Use a simple font (you can customize this or use any font)
-    #try:
-    #font = ImageFont.truetype("arial.ttf", 40)  # Using a larger font size (e.g., 40)
-    #except IOError:
-     #   font = ImageFont.load_default()  # Fallback to default font if custom font not available
-    
-    bbox = draw.textbbox((0, 0), captcha_text, font=font)
-    text_width = bbox[2] - bbox[0]
-    text_height = bbox[3] - bbox[1]
-    
-    # Position text centrally
-    text_position = ((width - text_width) // 2, (height - text_height) // 2)  # Center text
+        print("font path is",font_path)
+        #try:
+            
+            # Load the custom font
+        font = ImageFont.truetype(font_path, 40)  # Using a larger font size (e.g., 40)
+        #except IOError:
+        #    # If the font is not available, fall back to default
+        # font = ImageFont.load_default()
+        # Use a simple font (you can customize this or use any font)
+        #try:
+        #font = ImageFont.truetype("arial.ttf", 40)  # Using a larger font size (e.g., 40)
+        #except IOError:
+        #   font = ImageFont.load_default()  # Fallback to default font if custom font not available
+        
+        bbox = draw.textbbox((0, 0), captcha_text, font=font)
+        text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
+        
+        # Position text centrally
+        text_position = ((width - text_width) // 2, (height - text_height) // 2)  # Center text
 
-    # Draw the CAPTCHA text on the image with larger letters
-    draw.text(text_position, captcha_text, font=font, fill=(0, 0, 0))
+        # Draw the CAPTCHA text on the image with larger letters
+        draw.text(text_position, captcha_text, font=font, fill=(0, 0, 0))
 
-    # Draw the CAPTCHA text on the image
-    # draw.text((50, 15), captcha_text, font=font, fill=(0, 0, 0))
-    # draw.text(text_position, captcha_text, font=font, fill=(0, 0, 0))
+        # Draw the CAPTCHA text on the image
+        # draw.text((50, 15), captcha_text, font=font, fill=(0, 0, 0))
+        # draw.text(text_position, captcha_text, font=font, fill=(0, 0, 0))
 
 
-    # Save CAPTCHA text in the cache with a short expiration time
-    cache.set('captcha', captcha_text, timeout=300)  # 5 minutes timeout
+        # Save CAPTCHA text in the cache with a short expiration time
+        cache.set('captcha', captcha_text, timeout=300)  # 5 minutes timeout
 
-    # Return the image as a response
-    response = HttpResponse(content_type="image/png")
-    image.save(response, "PNG")
-    
+        # Return the image as a response
+        response = HttpResponse(content_type="image/png")
+        image.save(response, "PNG")
+        
 
-    response['Access-Control-Allow-Origin'] = '*'
-    response['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response['Access-Control-Allow-Headers'] = 'Content-Type'
-    return response
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response
+    except Exception as e :
+        logger.error(f"Error in get_image_url: {str(e)}")
+        return JsonResponse({
+            'error': str(e),
+            'image_url': request.build_absolute_uri(static('fonts/a.jpg'))  # Still return image URL
+            }, status=500)
+
 
 
 
