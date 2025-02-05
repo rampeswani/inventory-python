@@ -96,6 +96,7 @@ from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 import logging
 from django.http import JsonResponse
+from django.contrib.staticfiles import finders
 
 
 logger = logging.getLogger(__name__)
@@ -104,7 +105,11 @@ logger = logging.getLogger(__name__)
 def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
     captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-    font_path = static('fonts/ariblk.ttf')  # This should resolve correctly in both local and live environments
+#    font_path = static('fonts/ariblk.ttf')  # This should resolve correctly in both local and live environments
+    font_path = finders.find('fonts/ariblk.ttf')
+    if not font_path:
+        raise Exception("Font file not found!")
+
     
     # image_path = static('static/fonts/a.JPG')
     # static_dir = settings.STATIC_ROOT  
@@ -211,7 +216,7 @@ def generate_captcha(request):
         response['Access-Control-Allow-Headers'] = 'Content-Type'
         return response
     except Exception as e :
-        logger.error(f"Error in get_image_url: {str(e)}")
+        logger.error(f"Error in get font: {str(e)}")
         return JsonResponse({
             'error': str(e),
             'image_url': request.build_absolute_uri(static('fonts/a.jpg'))  # Still return image URL
