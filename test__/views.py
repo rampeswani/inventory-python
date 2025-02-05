@@ -92,13 +92,16 @@ from django.core.cache import cache
 from rest_framework.decorators import api_view
 import os
 from django.templatetags.static import static
+from django.conf import settings
 # @api_view(['GET'])
 def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
     # captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
     # font_path = static('fonts/a.JPG')  # This should resolve correctly in both local and live environments
-    image_path = ('static/fonts/a.JPG')
-
+    # image_path = static('static/fonts/a.JPG')
+    static_dir = settings.STATICFILES_DIRS[0]  # Access first static path
+    image_full_path = os.path.join(static_dir, 'fonts', 'a.JPG')  # Full 
+    print("d",image_full_path)
 
     # print("font path",font_path)
     #print(f"Font path: {font_path}")  # Log the font path
@@ -130,7 +133,7 @@ def generate_captcha(request):
 
         # return response
     response = HttpResponse()
-    return FileResponse(open(image_path, 'rb'), content_type='image/jpeg')
+    return FileResponse(open(image_full_path, 'rb'), content_type='image/jpeg')
 
     # except OSError as e:
     #     print(f"Error loading font: {e}")
