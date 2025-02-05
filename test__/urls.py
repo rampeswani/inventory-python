@@ -7,5 +7,6 @@ urlpatterns = [
     path('captcha/', views.generate_captcha, name='generate_captcha'),
     path("customer/", views.CustomerAPIView.as_view(),name='customer'),
     path("customer-get/",views.CustomerTypeAPIView.as_view(),name='customer-get'),
-    path('customer-get-get/',views.CustomerGetAPIView.as_view(),name='customer-get')
+    path('customer-get-get/',views.CustomerGetAPIView.as_view(),name='customer-get'),
+    path("page",views.Page,name='page')
 ]

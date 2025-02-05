@@ -93,7 +93,7 @@ ROOT_URLCONF = 'inventory_project_python.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['static'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Include the templates path
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

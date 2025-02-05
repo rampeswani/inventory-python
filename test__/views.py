@@ -351,3 +351,7 @@ class CustomerGetAPIView(APIView):
         customer_data = Customer.objects.filter(is_active = True)
         serializer  = CustomerGetSerializer(customer_data,many = True)
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+from django.shortcuts import render
+def Page(request):
+    return render(request,'home/p.html')
