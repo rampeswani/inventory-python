@@ -90,6 +90,7 @@ from django.core.cache import cache
 # Function to generate CAPTCHA image
 from rest_framework.decorators import api_view
 import os
+from django.templatetags.static import static
 # @api_view(['GET'])
 def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
@@ -99,7 +100,9 @@ def generate_captcha(request):
     width, height = 300, 100
     image = Image.new('RGB', (width, height), color=(255, 255, 255))
     draw = ImageDraw.Draw(image)
-    font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
+    # font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
+    font_path = static('fonts/arial.ttf')  
+    print("font path is",font_path)
     try:
         
         # Load the custom font
