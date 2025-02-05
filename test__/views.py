@@ -101,7 +101,7 @@ def generate_captcha(request):
     image = Image.new('RGB', (width, height), color=(255, 255, 255))
     draw = ImageDraw.Draw(image)
     # font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
-    font_path = static('fonts/arial.ttf')  
+    font_path = static('fonts/ariblk.ttf')  
     print("font path is",font_path)
     try:
         
