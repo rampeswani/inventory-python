@@ -129,7 +129,7 @@ def generate_captcha(request):
         print(f"Error loading font: {e}")
         # Fallback to default font if custom font fails
         font = ImageFont.load_default()
-        return HttpResponse("Error generating CAPTCHA image.", status=500)
+        return HttpResponse(f"Error generating CAPTCHA image. {e}", status=500)
 
     # # Create an image using Pillow
     # width, height = 300, 100
