@@ -219,7 +219,7 @@ def generate_captcha(request):
         logger.error(f"Error in get font: {str(e)}")
         return JsonResponse({
             'error': str(e),
-            'image_url': request.build_absolute_uri(static('fonts/a.jpg'))  # Still return image URL
+            'image_url': request.build_absolute_uri(static('ariblk.ttf'))  # Still return image URL
             }, status=500)
 
 
