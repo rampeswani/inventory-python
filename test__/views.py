@@ -100,10 +100,10 @@ def generate_captcha(request):
     draw = ImageDraw.Draw(image)
     
     # Use a simple font (you can customize this or use any font)
-    try:
-        font = ImageFont.truetype("arial.ttf", 40)  # Using a larger font size (e.g., 40)
-    except IOError:
-        font = ImageFont.load_default()  # Fallback to default font if custom font not available
+    #try:
+    font = ImageFont.truetype("arial.ttf", 40)  # Using a larger font size (e.g., 40)
+    #except IOError:
+     #   font = ImageFont.load_default()  # Fallback to default font if custom font not available
     
     bbox = draw.textbbox((0, 0), captcha_text, font=font)
     text_width = bbox[2] - bbox[0]
