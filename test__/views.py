@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny
+from django.http import FileResponse
 from django.core.cache import cache
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]
@@ -94,42 +95,47 @@ from django.templatetags.static import static
 # @api_view(['GET'])
 def generate_captcha(request):
     # Generate a random 6-character string for the CAPTCHA
-    captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-    font_path = static('fonts/ariblk.ttf')  # This should resolve correctly in both local and live environments
-    print(f"Font path: {font_path}")  # Log the font path
+    # captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    # font_path = static('fonts/a.JPG')  # This should resolve correctly in both local and live environments
+    image_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'a.JPG')
 
-    try:
-        # Create an image using Pillow
-        width, height = 300, 100  # Adjusted size to accommodate larger font
-        image = Image.new('RGB', (width, height), color=(255, 255, 255))
-        draw = ImageDraw.Draw(image)
+    # print("font path",font_path)
+    #print(f"Font path: {font_path}")  # Log the font path
 
-        # Use the font from the static directory
-        font = ImageFont.truetype(font_path, 40)  # Increase the font size
+    # try:
+        # # Create an image using Pillow
+        # width, height = 300, 100  # Adjusted size to accommodate larger font
+        # image = Image.new('RGB', (width, height), color=(255, 255, 255))
+        # draw = ImageDraw.Draw(image)
 
-        # Draw the CAPTCHA text on the image
-        text_width, text_height = draw.textsize(captcha_text, font=font)
-        draw.text(((width - text_width) / 2, (height - text_height) / 2), captcha_text, font=font, fill=(0, 0, 0))
+        # # Use the font from the static directory
+        # font = ImageFont.truetype(font_path, 40)  # Increase the font size
 
-        # Save CAPTCHA text in the cache with a short expiration time
-        cache.set('captcha', captcha_text, timeout=300)  # 5 minutes timeout
+        # # Draw the CAPTCHA text on the image
+        # text_width, text_height = draw.textsize(captcha_text, font=font)
+        # draw.text(((width - text_width) / 2, (height - text_height) / 2), captcha_text, font=font, fill=(0, 0, 0))
 
-        # Return the image as a response
-        response = HttpResponse(content_type="image/png")
-        image.save(response, "PNG")
+        # # Save CAPTCHA text in the cache with a short expiration time
+        # cache.set('captcha', captcha_text, timeout=300)  # 5 minutes timeout
+
+        # # Return the image as a response
+        # response = HttpResponse(content_type="image/png")
+        # image.save(response, "PNG")
         
-        # Allow cross-origin requests
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-        response['Access-Control-Allow-Headers'] = 'Content-Type'
+        # # Allow cross-origin requests
+        # response['Access-Control-Allow-Origin'] = '*'
+        # response['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+        # response['Access-Control-Allow-Headers'] = 'Content-Type'
 
-        return response
+        # return response
+    response = HttpResponse()
+    return FileResponse(open(image_path, 'rb'), content_type='image/jpeg')
 
-    except OSError as e:
-        print(f"Error loading font: {e}")
-        # Fallback to default font if custom font fails
-        font = ImageFont.load_default()
-        return HttpResponse(f"Error generating CAPTCHA image. {e}", status=500)
+    # except OSError as e:
+    #     print(f"Error loading font: {e}")
+    #     # Fallback to default font if custom font fails
+    #     font = ImageFont.load_default()
+    #     return font_path
 
     # # Create an image using Pillow
     # width, height = 300, 100
