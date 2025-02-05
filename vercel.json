@@ -10,8 +10,11 @@
         "config": { "distDir": "staticfiles_build" }
     }],
     "routes": [
-        { "src": "/static/(.*)", "dest": "/staticfiles_build/static/$1" }
-        ,
+        {
+            "src": "/static/(.*)",
+            "dest": "/static/$1"
+        },
+        
         {
             "src": "/(.*)",
             "dest": "inventory_project_python/wsgi.py"
