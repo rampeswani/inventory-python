@@ -29,7 +29,7 @@ RECAPTCHA_SECRET_KEY = '6LfO-KsqAAAAACMdXK6az6xUQD8v0pE15cehxBB2'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:7001',  # Your Angular app
