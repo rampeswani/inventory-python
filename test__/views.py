@@ -99,12 +99,10 @@ def generate_captcha(request):
     # captcha_text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
     # font_path = static('fonts/a.JPG')  # This should resolve correctly in both local and live environments
     # image_path = static('static/fonts/a.JPG')
-    if settings.DEBUG:
-        static_dir = settings.STATICFILES_DIRS[0]  # Get static folder path
-    else:
-        static_dir = settings.STATIC_ROOT  # Use STATIC_ROOT in production
-    image_full_path = os.path.join(static_dir, 'fonts', 'a.JPG')  # Construct full path
+    static_dir = settings.STATIC_ROOT  
 
+    # Full path to the image
+    image_full_path = os.path.join(static_dir ,'fonts', 'a.JPG')
     print(f"Looking for image at: {image_full_path}")  # Debugging log
 
 
