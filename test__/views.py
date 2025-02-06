@@ -389,7 +389,19 @@ class CustomerDetailAPIView(APIView):
         serializer = CustomerGetSerializer(customer)
         return Response(serializer.data,status = status.HTTP_200_OK)
 
+class CustomerDeleteAPIView(APIView):
+    def get(self,request,id):
+        try:
+            # Filter the customer with the provided id and delete it
+            customer = Customer.objects.get(customer_id=id)
+            customer.delete()
 
+            # Return a success message after deletion
+            return Response({"message": "Customer deleted successfully."}, status=status.HTTP_200_OK)
+        
+        except Customer.DoesNotExist:
+            # Handle the case where the customer doesn't exist
+            return Response({"message": "Customer not found."}, status=status.HTTP_404_NOT_FOUND)
 
 from django.shortcuts import render
 def Page(request):
