@@ -8,5 +8,6 @@ urlpatterns = [
     path("customer/", views.CustomerAPIView.as_view(),name='customer'),
     path("customer-get/",views.CustomerTypeAPIView.as_view(),name='customer-get'),
     path('customer-get-get/',views.CustomerGetAPIView.as_view(),name='customer-get'),
-    path("page",views.Page,name='page')
+    path("page",views.Page,name='page'),
+    path('customer-detail/<int:id>',views.CustomerDetailAPIView.as_view(),name='customer-detail')
 ]

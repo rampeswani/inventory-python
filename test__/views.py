@@ -375,13 +375,21 @@ class CustomerTypeAPIView(APIView):
 class CustomerGetSerializer(serializers.ModelSerializer):
     class Meta :
         model = Customer
-        fields = ['customer_name','customer_fathers_name','customer_contact_number','customer_name_hindi','customer_fathers_name_hindi','credit_amount']
+        fields = ['customer_id','customer_name','customer_fathers_name','customer_contact_number','customer_name_hindi','customer_fathers_name_hindi','credit_amount']
 
 class CustomerGetAPIView(APIView):
     def get(self,request):
         customer_data = Customer.objects.filter(is_active = True)
         serializer  = CustomerGetSerializer(customer_data,many = True)
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+class CustomerDetailAPIView(APIView):
+    def get(self,request,id):
+        customer = Customer.objects.get(customer_id = id)
+        serializer = CustomerGetSerializer(customer)
+        return Response(serializer.data,status = status.HTTP_200_OK)
+
+
 
 from django.shortcuts import render
 def Page(request):
