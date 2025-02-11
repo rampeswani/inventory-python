@@ -375,7 +375,7 @@ class CustomerTypeAPIView(APIView):
 class CustomerGetSerializer(serializers.ModelSerializer):
     class Meta :
         model = Customer
-        fields = ['customer_id','customer_name','customer_fathers_name','customer_contact_number','customer_name_hindi','customer_fathers_name_hindi','credit_amount']
+        fields = ['customer_id','customer_name','customer_fathers_name','customer_contact_number','customer_name_hindi','customer_fathers_name_hindi','credit_amount','description','customer_address','created_date']
 
 class CustomerGetAPIView(APIView):
     def get(self,request):
@@ -391,6 +391,7 @@ class CustomerDetailAPIView(APIView):
 
 class CustomerDeleteAPIView(APIView):
     def get(self,request,id):
+
         try:
             # Filter the customer with the provided id and delete it
             customer = Customer.objects.get(customer_id=id)
@@ -400,8 +401,10 @@ class CustomerDeleteAPIView(APIView):
             return Response({"message": "Customer deleted successfully."}, status=status.HTTP_200_OK)
         
         except Customer.DoesNotExist:
-            # Handle the case where the customer doesn't exist
             return Response({"message": "Customer not found."}, status=status.HTTP_404_NOT_FOUND)
+
+            # Handle the case where the customer doesn't exist
+            
 
 from django.shortcuts import render
 def Page(request):
