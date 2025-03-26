@@ -315,13 +315,12 @@ from googletrans import Translator
 class CustomerAPIView(APIView):
     # permission_classes = [IsAuthenticated]
 
-    def post(self,request):
+    def post(self, request):
+        
         user = request.user
         customer_data = request.data.get('data', {})  # Access the nested 'data' key
-        print("customer data is",customer_data)
-        
-        print("printing request = ", customer_data)
-        
+        print("customer data is", customer_data)
+
         try:
             # Ensure that customerType exists (foreign key reference)
             customer_type_id = customer_data['customerType']
@@ -331,29 +330,27 @@ class CustomerAPIView(APIView):
         except CustomerType.DoesNotExist:
             return Response({"error": "Invalid customer_type_id"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create the customer object
+        # Initialize variables before using them
+        customer_name_in_hindi = "Translation Failed"
+        customer_fathers_name_hindi = "Translation Error"
+
         translator = Translator()
         try:
-
             customer_name = customer_data.get('customer_name', '')
-            customer_fathers_name = customer_data.get('customer_fathers_name','')
+            customer_fathers_name = customer_data.get('customer_fathers_name', '')
+
             if customer_name:
                 customer_name_in_hindi = translator.translate(customer_name, src='en', dest='hi').text
-            else:
-                customer_name_in_hindi = "Translation Failed"
 
-            if customer_fathers_name :
-                customer_fathers_name_hindi = translator.translate(customer_name, src='en', dest='hi').text
-            else :
-                customer_fathers_name_hindi = " translation error"
+            if customer_fathers_name:
+                customer_fathers_name_hindi = translator.translate(customer_fathers_name, src='en', dest='hi').text
         except Exception as e:
             print("Translation Error:", str(e))
-            customer_name_in_hindi = "Translation Error"
 
         customer = Customer.objects.create(
             customer_name=customer_data['customer_name'],
-            customer_name_hindi = customer_name_in_hindi,
-            customer_fathers_name_hindi = customer_fathers_name_hindi,
+            customer_name_hindi=customer_name_in_hindi,
+            customer_fathers_name_hindi=customer_fathers_name_hindi,
             customer_fathers_name=customer_data['customer_fathers_name'],
             customer_address=customer_data['customer_address'],
             customer_contact_number=customer_data['customer_contact_number'],
@@ -371,6 +368,7 @@ class CustomerAPIView(APIView):
         # Serialize the customer object and return the response
         serializer = CustomerSerializer(customer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     
 class CustomerTypeSerializer(serializers.ModelSerializer):
     class Meta:
