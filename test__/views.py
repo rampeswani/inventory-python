@@ -409,3 +409,7 @@ class CustomerDeleteAPIView(APIView):
 from django.shortcuts import render
 def Page(request):
     return render(request,'home/p.html')
+
+
+def a ():
+    pass
