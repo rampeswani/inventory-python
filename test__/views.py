@@ -336,10 +336,16 @@ class CustomerAPIView(APIView):
         try:
 
             customer_name = customer_data.get('customer_name', '')
+            customer_fathers_name = customer_data.get('customer_fathers_name','')
             if customer_name:
                 customer_name_in_hindi = translator.translate(customer_name, src='en', dest='hi').text
             else:
                 customer_name_in_hindi = "Translation Failed"
+
+            if customer_fathers_name :
+                customer_fathers_name_hindi = translator.translate(customer_name, src='en', dest='hi').text
+            else :
+                customer_fathers_name_hindi = " translation error"
         except Exception as e:
             print("Translation Error:", str(e))
             customer_name_in_hindi = "Translation Error"
