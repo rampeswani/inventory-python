@@ -335,6 +335,8 @@ class CustomerAPIView(APIView):
         translator = Translator()
         customer_name_in_hindi = translator.translate(customer_data['customer_name'], src='en', dest='hi').text
         customer_fathers_name_hindi =translator.translate(customer_data['customer_fathers_name'], src='en', dest='hi').text
+        if customer_fathers_name_hindi is None :
+            customer_fathers_name_hindi = "Default none "
         print("customer name in hindi ",customer_name_in_hindi)
         customer = Customer.objects.create(
             customer_name=customer_data['customer_name'],
